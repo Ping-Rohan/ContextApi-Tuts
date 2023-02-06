@@ -3,21 +3,31 @@ export default function (state, action) {
     const index = state.cart.findIndex(
       (item) => item.name === action.cartItem.name
     );
-    console.log(index);
     if (index !== -1) {
       const cartItem = state.cart[index];
       const updatedItem = { ...cartItem, amount: cartItem.amount + 1 };
       const updatedItems = [...state.cart];
       updatedItems[index] = updatedItem;
 
-      return { ...state, cart: updatedItems };
+      return { product: state.product, cart: updatedItems };
     } else {
-      return { ...state, cart: [...state.cart, action.cartItem] };
+      return { product: state.product, cart: [...state.cart, action.cartItem] };
     }
   }
 
   if (action.type === "DeleteCart") {
-    const filtered = state.cart.filter((item) => item !== action.item);
-    return { ...state, cart: filtered };
+    const index = state.cart.findIndex(
+      (item) => item.name === action.item.name
+    );
+    const cartItem = state.cart[index];
+    if (cartItem && cartItem.amount > 1) {
+      const updatedCart = { ...cartItem, amount: cartItem.amount - 1 };
+      let updatedItem = [...state.cart];
+      updatedItem[index] = updatedCart;
+      return { ...state, cart: updatedItem };
+    } else {
+      const filtered = state.cart.filter((item) => item !== action.item);
+      return { ...state, cart: filtered };
+    }
   }
 }
