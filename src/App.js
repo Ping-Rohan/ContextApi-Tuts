@@ -1,24 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React from "react";
+import { ProductState } from "./Context/Index";
 
 function App() {
+  const { state, dispatch } = ProductState();
+
+  console.log(state);
+
+  function handleClick(item) {
+    dispatch({ type: "AddCart", cartItem: { name: item, amount: 1 } });
+  }
+
+  function handleDelete(item) {
+    dispatch({ type: "DeleteCart", item });
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {state.product.map((item) => (
+        <>
+          <li onClick={handleClick.bind(null, item.name)}>{item.name}</li>
+        </>
+      ))}
+
+      <h1>cart</h1>
+      <>
+        {state.cart.map((item) => (
+          <li onClick={handleDelete.bind(null, item)}>
+            {item.name}
+            {item.amount}
+          </li>
+        ))}
+      </>
+    </>
   );
 }
 
